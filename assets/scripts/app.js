@@ -16,7 +16,10 @@ const getUserInput = () => {
       title,
       [extraName]: [extraValue],
     },
-    id: Math.random(),
+    id: Math.random().toString(),
+    getFormattedTitle() {
+      return this.info.title.toUpperCase();
+    },
   };
 
   movies.push(newMovie);
@@ -44,10 +47,14 @@ const renderMovies = (filterValue = "") => {
 
   filteredMovie.forEach((movie) => {
     const newMovieLi = document.createElement("li");
-    let text = movie.info.title + " - ";
-    for (const key in movie.info) {
+
+    let { getFormattedTitle } = movie;
+    let text = getFormattedTitle.call(movie) + " - ";
+
+    const { info } = movie;
+    for (const key in info) {
       if (key !== "title") {
-        text += `${key} : ${movie.info[key]}`;
+        text += `${key} : ${info[key]}`;
       }
     }
     newMovieLi.textContent = text;
@@ -55,10 +62,10 @@ const renderMovies = (filterValue = "") => {
   });
 };
 
-const filterMovie = () => {
+const searchMovieHandler = () => {
   const filterTitle = document.getElementById("filter-title").value;
   renderMovies(filterTitle);
 };
 
 addMovieButton.addEventListener("click", addMovieButtonHandler);
-searchButton.addEventListener("click", filterMovie);
+searchButton.addEventListener("click", searchMovieHandler);
